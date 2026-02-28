@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.HETZNER_SSH_USER }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
           source: dist/
-          target: ~/kilc-website/
+          target: ~/kilc-platform/kilc-website/
           overwrite: true
 
       - name: Deploy nginx config to VPS
@@ -38,7 +38,7 @@ jobs:
           username: ${{ secrets.HETZNER_SSH_USER }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
           source: nginx/kilc-website.conf
-          target: ~/kilc-app/nginx/conf.d/
+          target: ~/kilc-platform/nginx/conf.d/
           overwrite: true
           strip_components: 1
 
@@ -48,4 +48,4 @@ jobs:
           host: ${{ secrets.HETZNER_SSH_HOST }}
           username: ${{ secrets.HETZNER_SSH_USER }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
-          script: docker exec kilc-app-nginx-1 nginx -s reload
+          script: docker exec kilc-nginx nginx -s reload
