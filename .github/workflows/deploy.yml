@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.HETZNER_SSH_USER }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
           source: dist/
-          target: ~/kilc-platform/kilc-website/
+          target: ~/kilc-website/
           overwrite: true
 
       - name: Deploy nginx config to VPS
