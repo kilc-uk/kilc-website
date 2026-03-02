@@ -1,0 +1,4 @@
+[    2160ms] [ERROR] Amplitude Logger [Error]: Error fetching resource center settings. Continuing with empty data. Failed to fetch @ https://kilc.co.uk/_astro-1771588480931/Page.BxvYgdPR.js:11
+[    2161ms] [ERROR] Amplitude Logger [Error]: Error fetching config. Continuing with empty data. Failed to fetch @ https://kilc.co.uk/_astro-1771588480931/Page.BxvYgdPR.js:11
+[    2161ms] [ERROR] Amplitude Logger [Error]: Error decoding config response. It is empty. @ https://kilc.co.uk/_astro-1771588480931/Page.BxvYgdPR.js:11
+[    2162ms] [ERROR] Amplitude Logger [Error]: Error decoding project settings [object Object] @ https://kilc.co.uk/_astro-1771588480931/Page.BxvYgdPR.js:11

@@ -14,6 +14,7 @@ export default {
           light:     '#F8F6F2',   // warm off-white — section backgrounds
           text:      '#1C1A17',   // body text
           footer:    '#E5E7EB',   // light slate gray — footer background
+          magenta:   '#D10056',   // magenta — CTA buttons
         },
       },
       fontFamily: {
