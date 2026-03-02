@@ -51,6 +51,7 @@ collections:
       - { label: Name, name: name, widget: string }
       - { label: Role, name: role, widget: string }
       - { label: Bio, name: bio, widget: text, required: false }
+      - { label: Organisation (leave blank for core team members), name: org, widget: string, required: false }
       - { label: Display Order, name: order, widget: number, required: false }
       - { label: Body, name: body, widget: markdown }
 
@@ -64,6 +65,7 @@ collections:
       - { label: Name, name: name, widget: string }
       - { label: Role, name: role, widget: string }
       - { label: Bio, name: bio, widget: text, required: false }
+      - { label: Organisation (leave blank for core team members), name: org, widget: string, required: false }
       - { label: Display Order, name: order, widget: number, required: false }
       - { label: Body, name: body, widget: markdown }
 
@@ -88,3 +90,49 @@ collections:
       - { label: Title, name: title, widget: string }
       - { label: Last Updated, name: lastUpdated, widget: string, required: false }
       - { label: Body, name: body, widget: markdown }
+
+  # ----- Guardian Shield Coverage (EN) -----
+  - name: coverage-en
+    label: "Guardian Shield Coverage (English)"
+    folder: src/content/coverage/en
+    create: true
+    extension: md
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text }
+      - { label: Display Order, name: order, widget: number, required: false }
+
+  # ----- Guardian Shield Coverage (ZH) -----
+  - name: coverage-zh
+    label: "Guardian Shield Coverage (Chinese)"
+    folder: src/content/coverage/zh
+    create: true
+    extension: md
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text }
+      - { label: Display Order, name: order, widget: number, required: false }
+
+  # ----- Company Formation Steps (EN) -----
+  - name: formation-steps-en
+    label: "Company Formation Steps (English)"
+    folder: src/content/formation-steps/en
+    create: true
+    extension: md
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text }
+      - { label: Icon, name: icon, widget: string, required: false }
+      - { label: Display Order, name: order, widget: number, required: false }
+
+  # ----- Company Formation Steps (ZH) -----
+  - name: formation-steps-zh
+    label: "Company Formation Steps (Chinese)"
+    folder: src/content/formation-steps/zh
+    create: true
+    extension: md
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text }
+      - { label: Icon, name: icon, widget: string, required: false }
+      - { label: Display Order, name: order, widget: number, required: false }

@@ -1,21 +1,14 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import Hero from '../components/Hero.astro';
+import { getCollection } from 'astro:content';
 
 const locale = 'en';
 
-const coverageItems = [
-  { title: 'Visa & Immigration', description: 'Guidance on visa compliance, extensions, and immigration matters throughout your time in the UK.' },
-  { title: 'Fraud Protection', description: 'Support in identifying and responding to fraud, scams, and financial exploitation targeting international students.' },
-  { title: 'Cyber Safety', description: 'Advice on online safety, data protection, and responding to cyberbullying, harassment, or digital threats.' },
-  { title: 'Mental Health', description: 'Access to resources and guidance for mental health challenges, including signposting to appropriate professional support.' },
-  { title: 'Personal Protection', description: 'Assistance with personal safety concerns, harassment, discrimination, and safeguarding matters.' },
-  { title: 'Housing', description: 'Support with housing disputes, tenancy rights, deposit protection, and issues with landlords or accommodation providers.' },
-  { title: 'Academic Issues', description: 'Guidance on academic misconduct allegations, grade appeals, disciplinary proceedings, and institutional disputes.' },
-  { title: 'Employment Rights', description: 'Advice on part-time employment rights, workplace disputes, unpaid wages, and ensuring compliance with student visa work restrictions.' },
-  { title: 'Consumer Matters', description: 'Support with consumer disputes, contract issues, and understanding your rights as a consumer in the UK.' },
-  { title: 'Crisis Support', description: 'Immediate guidance and coordination during emergencies — including legal crises, safety concerns, and urgent situations requiring rapid response.' },
-];
+const allCoverage = await getCollection('coverage');
+const coverageItems = allCoverage
+  .filter(e => e.id.startsWith('en/'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 ---
 
 <PageLayout
@@ -82,10 +75,10 @@ const coverageItems = [
             </div>
             <div>
               <h3 class="font-sans font-bold text-brand-dark mb-1">
-                {item.title}
+                {item.data.title}
               </h3>
               <p class="text-gray-600 text-sm leading-relaxed">
-                {item.description}
+                {item.data.description}
               </p>
             </div>
           </div>

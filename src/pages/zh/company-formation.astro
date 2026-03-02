@@ -1,35 +1,14 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import Hero from '../../components/Hero.astro';
+import { getCollection } from 'astro:content';
 
 const locale = 'zh';
 
-const steps = [
-  {
-    title: '企业结构建议',
-    description: '就企业结构选择提供指导，综合考虑责任承担、税务安排及运营需求等因素，帮助客户选定最适合的架构形式。',
-  },
-  {
-    title: '公司成立支持',
-    description: '协助完成公司注册流程，并准备及提交至 Companies House 的相关文件，包括公司章程（Articles of Association）及股东协议等。',
-  },
-  {
-    title: '许可与监管指导',
-    description: '就企业在当地政府或监管机构下需获得的各类许可证、执照及批准提供建议，确保企业合法、合规地运营。',
-  },
-  {
-    title: '银行开户协助',
-    description: '协助在英国开设企业银行账户，指导准备所需文件及满足银行要求。',
-  },
-  {
-    title: '税务登记',
-    description: '协助在 HMRC 完成税务登记，包括公司税、增值税（VAT）及 PAYE 等注册事项。',
-  },
-  {
-    title: '持续合规支持',
-    description: '提供持续的公司秘书服务及合规建议，确保企业始终满足 Companies House 及 HMRC 的各项要求。',
-  },
-];
+const allSteps = await getCollection('formationSteps');
+const steps = allSteps
+  .filter(e => e.id.startsWith('zh/'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 ---
 
 <PageLayout
@@ -63,10 +42,10 @@ const steps = [
               {index + 1}
             </div>
             <h3 class="text-lg font-sans font-bold text-brand-dark mb-3">
-              {step.title}
+              {step.data.title}
             </h3>
             <p class="text-gray-600 leading-relaxed text-sm">
-              {step.description}
+              {step.data.description}
             </p>
           </div>
         ))}

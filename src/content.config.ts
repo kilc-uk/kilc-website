@@ -19,6 +19,7 @@ const team = defineCollection({
     name: z.string(),
     role: z.string(),
     bio: z.string().optional(),
+    org: z.string().optional(),
     order: z.number().optional(),
   }),
 });
@@ -31,4 +32,23 @@ const policies = defineCollection({
   }),
 });
 
-export const collections = { services, team, policies };
+const coverage = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/coverage' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    order: z.number().optional(),
+  }),
+});
+
+const formationSteps = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/formation-steps' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    icon: z.string().optional(),
+    order: z.number().optional(),
+  }),
+});
+
+export const collections = { services, team, policies, coverage, formationSteps };

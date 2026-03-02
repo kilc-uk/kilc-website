@@ -1,21 +1,14 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import Hero from '../../components/Hero.astro';
+import { getCollection } from 'astro:content';
 
 const locale = 'zh';
 
-const services = [
-  { title: '签证与移民', description: '提供学生签证申请、续签及毕业后签证路径的专业指导。' },
-  { title: '防诈骗与反欺诈保护', description: '提供预防建议、举报协助及损失追回支持。' },
-  { title: '网络与在线安全', description: '处理网络霸凌、诽谤及各类数字安全威胁。' },
-  { title: '心理健康与福祉', description: '通过法律途径协助获取心理咨询，并提供反歧视保护。' },
-  { title: '人身安全与个人保障', description: '提供仇恨犯罪、种族歧视及监控风险方面的指导。' },
-  { title: '住房与租赁', description: '协助处理押金纠纷、维修问题及驱逐相关事项。' },
-  { title: '学术与学校问题', description: '协助申诉、投诉及应对纪律程序。' },
-  { title: '就业权利', description: '提供兼职工作、工资纠纷及职场公平相关建议。' },
-  { title: '消费与日常法律问题', description: '协助退款、处理不公平合同及小额索赔。' },
-  { title: '危机支援（高级版）', description: '为紧急威胁或突发事件提供 24/7 全天候响应。' },
-];
+const allCoverage = await getCollection('coverage');
+const coverageItems = allCoverage
+  .filter(e => e.id.startsWith('zh/'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 ---
 
 <PageLayout
@@ -63,14 +56,14 @@ const services = [
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="text-3xl font-sans font-bold text-brand-dark mb-12 text-center">服务范围</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {services.map((service) => (
+        {coverageItems.map(item => (
           <div class="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
             <svg class="w-6 h-6 text-brand-primary flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
             <div>
-              <h3 class="font-sans font-semibold text-brand-dark mb-1">{service.title}</h3>
-              <p class="text-gray-600 text-sm">{service.description}</p>
+              <h3 class="font-sans font-semibold text-brand-dark mb-1">{item.data.title}</h3>
+              <p class="text-gray-600 text-sm">{item.data.description}</p>
             </div>
           </div>
         ))}
