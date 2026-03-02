@@ -7,17 +7,17 @@ const locale = 'zh';
 const cards = [
   {
     title: '学术挑战',
-    icon: '📚',
+    icon: 'M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25',
     description: '我们为在英国的国际学生提供专业支持，就学业方面的挑战提供量身定制的指导，包括处理学术表现问题及相关纠纷，帮助学生顺利应对学术压力。',
   },
   {
     title: '学校纪律事务',
-    icon: '🏛️',
+    icon: 'M12 21v-8.25M15.75 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 10.5c-2.291 0-4.545.16-6.75.47V21M3 21h18',
     description: '当教育机构采取纪律行动时，在不熟悉的系统中可能会让人感到不知所措。我们帮助学生了解纪律程序、听证会流程及机构决定的后果，为您提供清晰的建议和支持。',
   },
   {
     title: '生活困难支持',
-    icon: '🤝',
+    icon: 'M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z',
     description: '我们为在英国面临生活困难的学生提供全面的法律协助，包括住宿问题、签证疑虑、经济压力等，帮助他们克服障碍，专注于学业与身心健康。',
   },
 ];
@@ -47,8 +47,10 @@ const cards = [
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {cards.map((card) => (
           <div class="bg-white rounded-lg p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-brand-primary/10 to-brand-secondary/10 flex items-center justify-center mb-6">
-              <span class="text-3xl">{card.icon}</span>
+            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-brand-primary/10 to-brand-secondary/10 flex items-center justify-center mb-6">
+              <svg class="w-7 h-7 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d={card.icon} />
+              </svg>
             </div>
             <h3 class="text-xl font-sans font-bold text-brand-dark mb-4">
               {card.title}
