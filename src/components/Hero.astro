@@ -5,6 +5,7 @@ interface Props {
   title: string;
   subtitle?: string;
   backgroundImage?: string;
+  backgroundVideo?: string;
   cta?: { text: string; href: string };
   showCta?: boolean;
   locale: Locale;
@@ -14,6 +15,7 @@ const {
   title,
   subtitle,
   backgroundImage = '/images/hero/an-aerial-view-of-a-city-with-tall-buildings.jpg',
+  backgroundVideo,
   cta,
   showCta = true,
   locale,
@@ -21,18 +23,33 @@ const {
 ---
 
 <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-  <!-- Background image -->
-  <div
-    class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-    style={`background-image: url('${backgroundImage}');`}
-  >
-    <!-- Dark neutral overlay matching original -->
-    <div class="absolute inset-0 bg-black/55"></div>
-  </div>
+  <!-- Background: video (preferred) or image fallback -->
+  {backgroundVideo ? (
+    <div class="absolute inset-0">
+      <video
+        class="absolute inset-0 w-full h-full object-cover"
+        autoplay
+        muted
+        loop
+        playsinline
+        poster={backgroundImage}
+      >
+        <source src={backgroundVideo} type="video/mp4" />
+      </video>
+      <div class="absolute inset-0 bg-black/55"></div>
+    </div>
+  ) : (
+    <div
+      class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      style={`background-image: url('${backgroundImage}');`}
+    >
+      <div class="absolute inset-0 bg-black/55"></div>
+    </div>
+  )}
 
   <!-- Content -->
   <div class="relative z-10 max-w-4xl mx-auto px-4 py-20 text-center text-white">
-    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold italic leading-tight mb-6">
+    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-sans font-bold italic leading-tight mb-6">
       {title}
     </h1>
     {subtitle && (

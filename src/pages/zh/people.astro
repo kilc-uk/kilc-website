@@ -50,7 +50,7 @@ const advisors = [
   <!-- Core Team -->
   <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-serif font-bold text-brand-dark mb-12 text-center">高级团队</h2>
+      <h2 class="text-3xl font-sans font-bold text-brand-dark mb-12 text-center">高级团队</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {team.map((member) => (
           <TeamMember name={member.name} role={member.role} bio={member.bio} />
@@ -62,11 +62,11 @@ const advisors = [
   <!-- Honorary Advisors -->
   <section class="py-16 bg-brand-light">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-serif font-bold text-brand-dark mb-12 text-center">荣誉顾问</h2>
+      <h2 class="text-3xl font-sans font-bold text-brand-dark mb-12 text-center">荣誉顾问</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {advisors.map((advisor) => (
           <div class="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
-            <h3 class="text-lg font-serif font-semibold text-brand-dark">{advisor.name}</h3>
+            <h3 class="text-lg font-sans font-semibold text-brand-dark">{advisor.name}</h3>
             <p class="text-brand-primary text-sm font-medium mb-2">{advisor.role}</p>
             <p class="text-gray-500 text-sm">{advisor.org}</p>
           </div>
@@ -78,7 +78,7 @@ const advisors = [
   <!-- Join CTA -->
   <section class="py-16 bg-gradient-to-r from-brand-primary to-brand-secondary text-white">
     <div class="max-w-4xl mx-auto px-4 text-center">
-      <h2 class="text-3xl font-serif font-bold mb-4">加入我们的团队</h2>
+      <h2 class="text-3xl font-sans font-bold mb-4">加入我们的团队</h2>
       <p class="text-lg text-white/90 mb-6">
         我们始终欢迎有才华的人士加入我们不断壮大的国际团队。
       </p>

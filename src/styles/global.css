@@ -2,55 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Self-hosted Roboto */
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/roboto-400.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/fonts/roboto-500.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/roboto-700.woff2') format('woff2');
-}
-
-/* Self-hosted Playfair Display */
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/fonts/playfair-display-400.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/fonts/playfair-display-500.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/playfair-display-700.woff2') format('woff2');
-}
 
 /* Self-hosted Noto Sans SC (Chinese) */
 @font-face {
@@ -72,7 +23,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    @apply font-sans;
   }
 }
 

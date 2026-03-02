@@ -16,8 +16,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Roboto', 'Noto Sans SC', 'system-ui', 'sans-serif'],
-        serif: ['Playfair Display', 'serif'],
+        sans: ['system-ui', 'Noto Sans SC', 'sans-serif'],
       },
     },
   },
