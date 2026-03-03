@@ -2,6 +2,7 @@
 title: "Beyond the Degree: Why Experience is the New Competitive Currency"
 date: 2026-03-03T16:01:00.000+00:00
 author: Lisa Mao
+coverImage: /images/london-city-from-eye.jpg
 tags:
   - Training
   - Career
