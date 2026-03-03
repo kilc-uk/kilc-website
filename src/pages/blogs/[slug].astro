@@ -8,7 +8,7 @@ export async function getStaticPaths() {
   return allPosts
     .filter(e => e.id.startsWith('en/'))
     .map(entry => ({
-      params: { slug: entry.id.replace('en/', '').replace('.md', '') },
+      params: { slug: entry.data.slug ?? entry.id.replace('en/', '').replace('.md', '') },
       props: { entry },
     }));
 }

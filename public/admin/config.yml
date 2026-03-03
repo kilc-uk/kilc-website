@@ -145,6 +145,7 @@ collections:
     extension: md
     fields:
       - { label: Title, name: title, widget: string }
+      - { label: URL Slug, name: slug, widget: string, required: false, hint: "Custom URL path (e.g. my-post-name). Defaults to filename if left blank." }
       - { label: Date, name: date, widget: datetime }
       - { label: Author, name: author, widget: string, required: false }
       - { label: Cover Image, name: coverImage, widget: image, required: false }
@@ -161,6 +162,7 @@ collections:
     extension: md
     fields:
       - { label: Title, name: title, widget: string }
+      - { label: URL Slug, name: slug, widget: string, required: false, hint: "Custom URL path (e.g. my-post-name). Defaults to filename if left blank." }
       - { label: Date, name: date, widget: datetime }
       - { label: Author, name: author, widget: string, required: false }
       - { label: Cover Image, name: coverImage, widget: image, required: false }

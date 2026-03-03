@@ -19,8 +19,8 @@ function formatDate(date: Date): string {
   return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-function slugFromId(id: string): string {
-  return id.replace('zh/', '').replace('.md', '');
+function effectiveSlug(id: string, frontmatterSlug?: string): string {
+  return frontmatterSlug ?? id.replace('zh/', '').replace('.md', '');
 }
 ---
 
@@ -57,7 +57,7 @@ function slugFromId(id: string): string {
       ) : (
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="posts-grid">
           {posts.map(post => {
-            const slug = slugFromId(post.id);
+            const slug = effectiveSlug(post.id, post.data.slug);
             const tags = post.data.tags ?? [];
             return (
               <article
