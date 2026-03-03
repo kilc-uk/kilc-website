@@ -45,6 +45,34 @@ git push
 # CI deploys the reverted build automatically
 ```
 
+## CMS OAuth Proxy (Cloudflare Worker)
+
+The CMS login (`/admin/`) uses a self-hosted OAuth proxy instead of Netlify.
+
+| Component | Details |
+|-----------|---------|
+| Worker name | `sveltia-cms-auth` |
+| Worker URL | `https://sveltia-cms-auth.shy-star-b244.workers.dev` |
+| Cloudflare account | `shy-star-b244.workers.dev` subdomain |
+| GitHub OAuth App | **KILC CMS** (under kilc-uk org) |
+| Secrets | Stored as Cloudflare Worker secrets — never in git |
+
+### Rotating the GitHub OAuth secret
+
+1. Go to **GitHub → Settings → Developer settings → OAuth Apps → KILC CMS**
+2. Click **Generate a new client secret** — save the new value
+3. Update the Worker secret: `wrangler secret put GITHUB_CLIENT_SECRET` (run from `/tmp/sveltia-cms-auth`)
+4. The old secret is immediately invalid
+
+### Re-deploying the Worker
+
+```bash
+cd /tmp/sveltia-cms-auth   # or re-clone: git clone https://github.com/sveltia/sveltia-cms-auth.git
+npm install
+wrangler login
+wrangler deploy
+```
+
 ## Monitoring
 
 - **Site up?** Visit https://kilc.co.uk
@@ -66,10 +94,19 @@ Check the Actions log. Common causes:
 - Type error → run `npx tsc --noEmit` locally to reproduce
 - Missing i18n key → add to both `en.json` and `zh.json`
 - Broken import → run `npx astro sync` then rebuild
+- Invalid blog frontmatter → ensure every `.md` in `src/content/blog/en/` has required fields (`title`, `date`, `author`, `excerpt`)
 
 ### SSL certificate error
 
 Origin cert at `~/kilc-platform/nginx/certs/kilc-origin.pem` on VPS. Managed by Cloudflare — do not regenerate without updating Cloudflare settings.
+
+### CMS login fails / 404 on GitHub consent
+
+- Confirm callback URL in **GitHub → OAuth Apps → KILC CMS** is exactly:
+  `https://sveltia-cms-auth.shy-star-b244.workers.dev/callback`
+- Confirm the user is a collaborator on `kilc-uk/kilc-website`
+- Check Worker is live: `curl https://sveltia-cms-auth.shy-star-b244.workers.dev`
+- Check `public/admin/config.yml` has `base_url: https://sveltia-cms-auth.shy-star-b244.workers.dev`
 
 ### Email broken
 
