@@ -43,8 +43,9 @@
     "cookieSettings": "Cookie 设置"
   },
   "cookieBanner": {
+    "title": "Cookie 偏好设置",
     "message": "我们使用 Cookie 来分析网站流量并改善您的体验。分析数据保存在我们自己的服务器上，绝不会与第三方共享。",
-    "learnMore": "了解更多",
+    "learnMore": "Cookie 政策",
     "accept": "接受分析 Cookie",
     "decline": "仅使用必要 Cookie"
   },

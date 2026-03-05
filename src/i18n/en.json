@@ -43,8 +43,9 @@
     "cookieSettings": "Cookie Settings"
   },
   "cookieBanner": {
+    "title": "Cookie Preferences",
     "message": "We use cookies to analyse site traffic and improve your experience. Analytics data stays on our own servers and is never shared with third parties.",
-    "learnMore": "Learn more",
+    "learnMore": "Cookie Policy",
     "accept": "Accept Analytics",
     "decline": "Essential Only"
   },
