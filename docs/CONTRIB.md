@@ -22,7 +22,7 @@
 1. `npm run dev` — start local server
 2. Make changes — Astro hot-reloads
 3. `npx astro sync && npx tsc --noEmit` — confirm types pass
-4. `npm run build` — confirm 44 pages build with zero errors
+4. `npm run build` — confirm 45 pages build with zero errors
 5. Commit and push to `main` — CI deploys automatically
 
 ## Adding a New Page
@@ -107,7 +107,7 @@ This is a static site — no `.env` file is required. All secrets (GitHub OAuth)
 ## Before Committing
 
 ```bash
-npm run build              # Must succeed — no warnings, 44 pages
+npm run build              # Must succeed — no warnings, 45 pages
 npx astro sync
 npx tsc --noEmit           # Must succeed — zero type errors
 git status                 # Review changed files

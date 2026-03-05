@@ -7,7 +7,8 @@
 - **Framework**: Astro 5 (static generation)
 - **Styling**: Tailwind CSS 3.4.19 with custom brand tokens
 - **i18n**: English (default `/en/*`) and Chinese (`/zh/*`) with alternate slugs
-- **Analytics**: Umami (analytics.kilc.co.uk, embedded in BaseLayout.astro)
+- **Analytics**: Umami (analytics.kilc.co.uk, consent-gated via CookieBanner.astro)
+- **Chat API**: Node.js server (`chat-api/`) with LLM-powered assistant, deployed via pm2 on VPS
 - **Status**: Production live
 
 ## Key Architecture
@@ -33,14 +34,33 @@ Changes require testing all 45 pages locally before committing.
 - **Files**: `src/i18n/en.json`, `src/i18n/zh.json`, `src/i18n/utils.ts`
 - **Function**: `t(locale, 'key.path')` for nested translation lookup
 - **Alternate Slugs**: ZH pages may have different URLs (e.g., `/global-market-navigation` → `/zh/global-market-strategy`)
-- **Mapping**: See `zhSlugMap` and `enSlugMap` in `src/i18n/utils.ts`
-- **SEO**: Hreflang links in BaseLayout.astro for lang-specific alternates
+- **Mapping**: See `zhSlugMap` and `enSlugMap` in `src/i18n/utils.ts`. Only pages whose ZH slug differs from the EN slug need entries — pages with identical slugs use the default fallback (`/zh` + EN path).
+- **SEO**: Hreflang links in BaseLayout.astro via `getAlternateUrl()` which normalizes trailing slashes before slug map lookup
 
 ### Core Layouts & Components
 
-- **BaseLayout.astro**: Master layout with Umami analytics script, hreflang tags, full SEO head (OG, Twitter Cards, JSON-LD, RSS discovery). Props: `title`, `description`, `ogImage`, `ogType` (`'website'|'article'`), `articleMeta` (blog posts), `jsonLd` (page-specific structured data)
+- **BaseLayout.astro**: Master layout with hreflang tags, full SEO head (OG, Twitter Cards, JSON-LD, RSS discovery), and CookieBanner. Props: `title`, `description`, `ogImage`, `ogType` (`'website'|'article'`), `articleMeta` (blog posts), `jsonLd` (page-specific structured data)
 - **Global Styles**: `src/styles/global.css` (Tailwind directives + custom utilities)
 - **Font**: `system-ui` primary, `Noto Sans SC` for Chinese glyphs (self-hosted woff2 in `/fonts/`)
+- **ChatWidget.astro**: Floating chat bubble on all pages; sends multi-turn conversation history to `/api/chat`; renders markdown links `[text](/url)` as clickable `<a>` tags (DOM-based, XSS-safe, internal-only URL regex). Links display in brand gold (`#C5A059`) via inline style (Tailwind-purge-safe). Malformed LLM artifacts like `[](/)` and `[text]()` are stripped before rendering.
+- **CookieBanner.astro**: GDPR cookie consent banner; gates Umami analytics behind user consent (`localStorage` key `kilc_cookie_consent_v1`). Footer "Cookie Settings" button re-shows the banner via `kilc:reset-consent` CustomEvent
+
+### Chat API (`chat-api/`)
+
+A standalone Node.js HTTP server providing an LLM-powered assistant for KILC services guidance. The system prompt positions KILC as an international legal consultancy (London, Dubai, KL) with 7 service areas + Guardian Shield programme. CTA is conditional (only when the user has a specific professional need), not forced on every response.
+
+- **Files**: `chat-api/server.js` (HTTP server), `chat-api/prompt.js` (system prompts EN/ZH)
+- **Endpoint**: `POST /api/chat` — accepts `{ messages: [{role, content}...], locale }` (multi-turn) or legacy `{ message: "...", locale }` (single-turn)
+- **LLM**: OpenAI-compatible API (configured via env vars on VPS; default model: `qwen-turbo`)
+- **Rate limit**: 20 requests/IP/minute (in-memory)
+- **Validation**: Max 10 messages, each max 500 chars, roles must be `user` or `assistant`
+- **Proxy**: Nginx routes `/api/chat` → `localhost:3001` (chat-api runs on VPS via pm2)
+- **Env vars** (on VPS at `~/kilc-website/chat-api/.env`, not in git):
+  - `OPENAI_API_KEY` — Required
+  - `OPENAI_BASE_URL` — Custom endpoint (optional)
+  - `OPENAI_MODEL` — Model name (default: `qwen-turbo`)
+  - `ALLOWED_ORIGINS` — CORS origins (default: `https://kilc.co.uk`)
+  - `PORT` — Server port (default: `3001`)
 
 ## Development Workflow
 
@@ -77,7 +97,7 @@ git status            # Verify expected changes
 - `tailwind.config.mjs` — Brand colors are production-locked; contact design team if changes needed
 - `.github/workflows/deploy.yml` — Deployment pipeline; any changes require review
 - Cloudflare DNS records (DKIM, SPF, DMARC) — Maintained externally; will break email
-- `src/layouts/BaseLayout.astro` — Umami analytics ID hardcoded; changes affect tracking
+- `src/components/CookieBanner.astro` — Umami Website ID and consent logic; changes affect analytics tracking
 
 ### Hostinger Email
 
@@ -93,7 +113,9 @@ Triggers on `push main`:
 
 1. **Build Job**: `npx astro sync` → `tsc --noEmit` → `npm run build`
 2. **Artifact**: `dist/` uploaded (1-day retention)
-3. **Deploy Job**: SCP dist/ and nginx config to VPS, reload nginx
+3. **Deploy Job**:
+   - SCP `dist/` and nginx config to VPS, reload nginx
+   - SCP `chat-api/` to VPS, `npm install --production`, pm2 restart `kilc-chat`
 
 **Required GitHub Secrets**:
 - `HETZNER_SSH_HOST`: 157.90.116.169
@@ -126,14 +148,19 @@ Triggers on `push main`:
 ### Alternate Slug Example
 
 ```typescript
+// Only pages where ZH slug differs from EN slug need entries
 const zhSlugMap: Record<string, string> = {
-  "/page-name": "/zh/page-slug-in-chinese",
-  // ...
+  "/global-market-navigation": "/zh/global-market-strategy",
+  "/immigration": "/zh/immigration-advisory",
+  "/criminal": "/zh/criminal-defence",
+  "/estate-investment": "/zh/real-estate-investment-protection",
+  "/contact": "/zh/contact-us",
 };
 ```
 
 - EN page at `/page-name` maps to ZH at `/zh/page-slug-in-chinese`
-- Not all pages need alternate slugs (default: `/zh` + EN slug)
+- Pages with identical slugs (e.g., `/programme` → `/zh/programme`) do NOT need entries — the default fallback handles them
+- `getAlternateUrl()` normalizes trailing slashes before lookup
 
 ## Common Tasks
 
@@ -181,11 +208,11 @@ git add . && git commit -m "feat: add new-page" && git push
 
 ### Update Analytics
 
-Umami script is in `src/layouts/BaseLayout.astro` (line 58). **Do not modify Website ID** (c3272e3b-c8cc-4770-9fa0-55f10d8a162c) unless instructed.
+Umami is consent-gated via `src/components/CookieBanner.astro`. The script is dynamically injected only after the user accepts analytics cookies. **Do not modify Website ID** (c3272e3b-c8cc-4770-9fa0-55f10d8a162c) unless instructed. To force all users to re-consent (e.g. after a cookie policy change), bump the version suffix in `CONSENT_KEY` (e.g. `_v1` → `_v2`).
 
 ### Adjust Brand Colors
 
-Edit `tailwind.config.mjs` under `theme.extend.colors.brand`. Rebuild and test all 44 pages locally before committing.
+Edit `tailwind.config.mjs` under `theme.extend.colors.brand`. Rebuild and test all 45 pages locally before committing.
 
 ## Troubleshooting
 
@@ -218,7 +245,7 @@ Do not modify Cloudflare DNS. Contact email provider (Hostinger) if MX records n
 - See `README.md` for quick-start and setup
 - Astro docs: https://docs.astro.build
 - Tailwind docs: https://tailwindcss.com
-- This project does not have a separate API or backend — pure static site
+- Chat API (`chat-api/`) is a standalone Node.js server deployed alongside the static site
 
 ## Contacts & Handoff
 
@@ -230,4 +257,4 @@ Do not modify Cloudflare DNS. Contact email provider (Hostinger) if MX records n
 
 ---
 
-**Last Updated**: March 4, 2026 (Blog nav item, RSS feed at /rss.xml, full SEO head: og:site_name, og:image dimensions, Twitter Cards, JSON-LD Organization+BlogPosting, article OG meta on blog posts, preconnect hint)
+**Last Updated**: March 5, 2026 (Chat prompt rewrite: international positioning, conditional CTA, 7 services + Guardian Shield; ChatWidget: gold link color, malformed markdown stripping, hardened URL regex; Hreflang fix: BaseLayout uses getAlternateUrl() with trailing-slash normalization; Dead code cleanup: removed 6 unused fonts, 17 unused images, stale CMS policy collections, redundant slug map entries)

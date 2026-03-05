@@ -38,8 +38,6 @@ const zhSlugMap: Record<string, string> = {
   "/criminal": "/zh/criminal-defence",
   "/estate-investment": "/zh/real-estate-investment-protection",
   "/contact": "/zh/contact-us",
-  "/programme": "/zh/programme",
-  "/company-formation": "/zh/company-formation",
 };
 
 const enSlugMap: Record<string, string> = Object.fromEntries(
@@ -53,9 +51,13 @@ export function getAlternateUrl(
   pathname: string,
   currentLocale: Locale,
 ): string {
+  // Normalize: strip trailing slash for map lookup (but keep "/" as-is)
+  const normalized =
+    pathname.length > 1 ? pathname.replace(/\/$/, "") : pathname;
+
   if (currentLocale === "en") {
-    return zhSlugMap[pathname] || `/zh${pathname}`;
+    return zhSlugMap[normalized] || `/zh${normalized}`;
   }
   // Strip /zh prefix for lookup
-  return enSlugMap[pathname] || pathname.replace(/^\/zh/, "") || "/";
+  return enSlugMap[normalized] || normalized.replace(/^\/zh/, "") || "/";
 }

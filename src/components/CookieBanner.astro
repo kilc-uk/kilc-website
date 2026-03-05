@@ -1,0 +1,107 @@
+---
+import { t } from '../i18n/utils';
+import type { Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const prefix = locale === 'zh' ? '/zh' : '';
+---
+
+<div
+  id="cookie-banner"
+  role="dialog"
+  aria-label={locale === 'zh' ? 'Cookie 同意' : 'Cookie consent'}
+  class="fixed bottom-0 inset-x-0 z-[9999] hidden"
+>
+  <div class="mx-auto max-w-3xl px-4 pb-4">
+    <div class="rounded-xl bg-brand-dark/95 backdrop-blur-sm p-5 shadow-2xl ring-1 ring-white/10 text-sm text-gray-200">
+      <p class="mb-4 leading-relaxed">
+        {t(locale, 'cookieBanner.message')}{' '}
+        <a href={`${prefix}/cookie-policy`} class="text-brand-primary hover:text-brand-secondary underline underline-offset-2 transition-colors">
+          {t(locale, 'cookieBanner.learnMore')}
+        </a>
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <button
+          id="cookie-accept"
+          class="rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-brand-dark hover:bg-brand-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-brand-dark"
+        >
+          {t(locale, 'cookieBanner.accept')}
+        </button>
+        <button
+          id="cookie-decline"
+          class="rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-gray-200 hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-brand-dark"
+        >
+          {t(locale, 'cookieBanner.decline')}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  var CONSENT_KEY = 'kilc_cookie_consent_v1';
+  var WEBSITE_ID = 'c3272e3b-c8cc-4770-9fa0-55f10d8a162c';
+  var ANALYTICS_SRC = 'https://analytics.kilc.co.uk/script.js';
+
+  var banner = document.getElementById('cookie-banner');
+  var acceptBtn = document.getElementById('cookie-accept');
+  var declineBtn = document.getElementById('cookie-decline');
+
+  function showBanner() {
+    if (banner) {
+      banner.classList.remove('hidden');
+      if (acceptBtn) acceptBtn.focus();
+    }
+  }
+
+  function hideBanner() {
+    if (banner) banner.classList.add('hidden');
+  }
+
+  function loadAnalytics() {
+    if (document.querySelector('script[data-website-id="' + WEBSITE_ID + '"]')) return;
+    var s = document.createElement('script');
+    s.defer = true;
+    s.src = ANALYTICS_SRC;
+    s.setAttribute('data-website-id', WEBSITE_ID);
+    s.setAttribute('data-domains', 'kilc.co.uk');
+    document.head.appendChild(s);
+  }
+
+  function init() {
+    var stored = localStorage.getItem(CONSENT_KEY);
+    if (stored === 'accepted') {
+      loadAnalytics();
+    } else if (stored === null) {
+      showBanner();
+    }
+  }
+
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', function () {
+      localStorage.setItem(CONSENT_KEY, 'accepted');
+      hideBanner();
+      loadAnalytics();
+    });
+  }
+
+  if (declineBtn) {
+    declineBtn.addEventListener('click', function () {
+      localStorage.setItem(CONSENT_KEY, 'declined');
+      hideBanner();
+    });
+  }
+
+  window.addEventListener('kilc:reset-consent', function () {
+    localStorage.removeItem(CONSENT_KEY);
+    showBanner();
+  });
+
+  init();
+})();
+</script>

@@ -18,16 +18,13 @@
     "careers": "职业机会",
     "contact": "联系我们",
     "companyFormation": "公司注册",
-    "platform": "客户平台",
     "xos": "XOS",
     "blog": "博客"
   },
   "hero": {
-    "cta": "立即开始",
-    "learnMore": "了解更多"
+    "cta": "立即开始"
   },
   "contact": {
-    "title": "联系我们",
     "name": "姓名",
     "email": "电子邮件",
     "message": "留言",
@@ -42,15 +39,18 @@
     "privacy": "隐私政策",
     "cookies": "Cookie政策",
     "aml": "反洗钱政策",
-    "ctf": "反恐融资政策"
+    "ctf": "反恐融资政策",
+    "cookieSettings": "Cookie 设置"
+  },
+  "cookieBanner": {
+    "message": "我们使用 Cookie 来分析网站流量并改善您的体验。分析数据保存在我们自己的服务器上，绝不会与第三方共享。",
+    "learnMore": "了解更多",
+    "accept": "接受分析 Cookie",
+    "decline": "仅使用必要 Cookie"
   },
   "chat": {
     "title": "在线咨询",
     "placeholder": "输入您的消息...",
     "send": "发送"
-  },
-  "language": {
-    "en": "EN",
-    "zh": "中文"
   }
 }

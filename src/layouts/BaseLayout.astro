@@ -1,7 +1,8 @@
 ---
 import '../styles/global.css';
-import { getLocaleFromUrl, t } from '../i18n/utils';
+import { getLocaleFromUrl, getAlternateUrl, t } from '../i18n/utils';
 import type { Locale } from '../i18n/utils';
+import CookieBanner from '../components/CookieBanner.astro';
 
 interface Props {
   title?: string;
@@ -29,9 +30,7 @@ const {
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const alternateLocale = locale === 'en' ? 'zh' : 'en';
-const alternatePath = locale === 'en'
-  ? `/zh${Astro.url.pathname === '/' ? '' : Astro.url.pathname}`
-  : Astro.url.pathname.replace(/^\/zh/, '') || '/';
+const alternatePath = getAlternateUrl(Astro.url.pathname, locale);
 const alternateUrl = new URL(alternatePath, Astro.site);
 ---
 
@@ -104,11 +103,11 @@ const alternateUrl = new URL(alternatePath, Astro.site);
       <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     )}
 
-    <!-- Umami analytics -->
-    <script defer src="https://analytics.kilc.co.uk/script.js" data-website-id="c3272e3b-c8cc-4770-9fa0-55f10d8a162c"></script>
+    <!-- Umami analytics — loaded dynamically by CookieBanner after consent -->
   </head>
   <body>
     <slot />
+    <CookieBanner locale={locale} />
     <script>
       const observer = new IntersectionObserver(
         (entries) => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }),

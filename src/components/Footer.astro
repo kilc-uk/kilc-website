@@ -68,7 +68,20 @@ const year = new Date().getFullYear();
               </a>
             </li>
           ))}
+          <li>
+            <button
+              id="cookie-settings-btn"
+              class="text-gray-600 hover:text-brand-dark text-sm transition-colors cursor-pointer bg-transparent border-none p-0"
+            >
+              {t(locale, 'footer.cookieSettings')}
+            </button>
+          </li>
         </ul>
+        <script is:inline>
+          document.getElementById('cookie-settings-btn')?.addEventListener('click', function () {
+            window.dispatchEvent(new CustomEvent('kilc:reset-consent'));
+          });
+        </script>
 
         <!-- WeChat QR -->
         <div class="mt-6">

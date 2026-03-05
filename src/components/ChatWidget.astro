@@ -88,24 +88,31 @@ const { locale } = Astro.props;
 
   /** Parse markdown links [text](/url) into DOM nodes (XSS-safe, internal links only) */
   function renderMarkdownLinks(text, container) {
-    const linkPattern = /\[([^\]]+)\]\((\/[^)]*)\)/g;
+    // Strip malformed markdown artifacts the LLM sometimes produces
+    const cleaned = text
+      .replace(/\[\]\([^)]*\)/g, '')       // [](anything) — empty text, remove entirely
+      .replace(/\[([^\]]+)\]\(\)/g, '$1')  // [text]() — empty URL, keep text only
+      .trim();
+
+    const linkPattern = /\[([^\]]+)\]\((\/[a-zA-Z0-9\-_/]*)\)/g;
     let lastIndex = 0;
     let match;
 
-    while ((match = linkPattern.exec(text)) !== null) {
+    while ((match = linkPattern.exec(cleaned)) !== null) {
       if (match.index > lastIndex) {
-        container.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+        container.appendChild(document.createTextNode(cleaned.slice(lastIndex, match.index)));
       }
       const a = document.createElement('a');
       a.href = match[2];
       a.textContent = match[1];
       a.className = 'underline font-medium hover:opacity-80';
+      a.style.color = '#C5A059';  // brand-primary gold
       container.appendChild(a);
       lastIndex = linkPattern.lastIndex;
     }
 
-    if (lastIndex < text.length) {
-      container.appendChild(document.createTextNode(text.slice(lastIndex)));
+    if (lastIndex < cleaned.length) {
+      container.appendChild(document.createTextNode(cleaned.slice(lastIndex)));
     }
   }
 

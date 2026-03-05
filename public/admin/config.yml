@@ -69,28 +69,6 @@ collections:
       - { label: Display Order, name: order, widget: number, required: false }
       - { label: Body, name: body, widget: markdown }
 
-  # ----- Policy Pages (EN) -----
-  - name: policies-en
-    label: "Policies (English)"
-    folder: src/content/policies/en
-    create: true
-    extension: md
-    fields:
-      - { label: Title, name: title, widget: string }
-      - { label: Last Updated, name: lastUpdated, widget: string, required: false }
-      - { label: Body, name: body, widget: markdown }
-
-  # ----- Policy Pages (ZH) -----
-  - name: policies-zh
-    label: "Policies (Chinese)"
-    folder: src/content/policies/zh
-    create: true
-    extension: md
-    fields:
-      - { label: Title, name: title, widget: string }
-      - { label: Last Updated, name: lastUpdated, widget: string, required: false }
-      - { label: Body, name: body, widget: markdown }
-
   # ----- Guardian Shield Coverage (EN) -----
   - name: coverage-en
     label: "Guardian Shield Coverage (English)"

@@ -18,16 +18,13 @@
     "careers": "Careers",
     "contact": "Contact",
     "companyFormation": "Company Formation",
-    "platform": "Client Platform",
     "xos": "XOS",
     "blog": "Blog"
   },
   "hero": {
-    "cta": "Get Started",
-    "learnMore": "Learn More"
+    "cta": "Get Started"
   },
   "contact": {
-    "title": "Contact Us",
     "name": "Name",
     "email": "Email",
     "message": "Message",
@@ -42,15 +39,18 @@
     "privacy": "Privacy Policy",
     "cookies": "Cookie Policy",
     "aml": "AML Policy",
-    "ctf": "Counter-Terrorism Financing"
+    "ctf": "Counter-Terrorism Financing",
+    "cookieSettings": "Cookie Settings"
+  },
+  "cookieBanner": {
+    "message": "We use cookies to analyse site traffic and improve your experience. Analytics data stays on our own servers and is never shared with third parties.",
+    "learnMore": "Learn more",
+    "accept": "Accept Analytics",
+    "decline": "Essential Only"
   },
   "chat": {
     "title": "Chat with us",
     "placeholder": "Type your message...",
     "send": "Send"
-  },
-  "language": {
-    "en": "EN",
-    "zh": "中文"
   }
 }

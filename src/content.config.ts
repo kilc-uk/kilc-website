@@ -24,14 +24,6 @@ const team = defineCollection({
   }),
 });
 
-const policies = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/policies" }),
-  schema: z.object({
-    title: z.string(),
-    lastUpdated: z.string().optional(),
-  }),
-});
-
 const coverage = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/coverage" }),
   schema: z.object({
@@ -68,7 +60,6 @@ const blog = defineCollection({
 export const collections = {
   services,
   team,
-  policies,
   coverage,
   formationSteps,
   blog,
