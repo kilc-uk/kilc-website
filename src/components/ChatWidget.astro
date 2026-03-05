@@ -74,6 +74,8 @@ const { locale } = Astro.props;
   const chatMessages = document.getElementById('chat-messages');
 
   let isOpen = false;
+  const conversationHistory = [];
+  const MAX_HISTORY = 10;
 
   toggle?.addEventListener('click', () => {
     isOpen = !isOpen;
@@ -84,12 +86,41 @@ const { locale } = Astro.props;
     if (isOpen) chatInput?.focus();
   });
 
+  /** Parse markdown links [text](/url) into DOM nodes (XSS-safe, internal links only) */
+  function renderMarkdownLinks(text, container) {
+    const linkPattern = /\[([^\]]+)\]\((\/[^)]*)\)/g;
+    let lastIndex = 0;
+    let match;
+
+    while ((match = linkPattern.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        container.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+      }
+      const a = document.createElement('a');
+      a.href = match[2];
+      a.textContent = match[1];
+      a.className = 'underline font-medium hover:opacity-80';
+      container.appendChild(a);
+      lastIndex = linkPattern.lastIndex;
+    }
+
+    if (lastIndex < text.length) {
+      container.appendChild(document.createTextNode(text.slice(lastIndex)));
+    }
+  }
+
   function addMessage(text, isUser) {
     const wrapper = document.createElement('div');
     wrapper.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
     const bubble = document.createElement('div');
     bubble.className = `${isUser ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-800'} rounded-lg px-3 py-2 text-sm max-w-[85%]`;
-    bubble.textContent = text;
+
+    if (isUser) {
+      bubble.textContent = text;
+    } else {
+      renderMarkdownLinks(text, bubble);
+    }
+
     wrapper.appendChild(bubble);
     chatMessages?.appendChild(wrapper);
     chatMessages?.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
@@ -103,16 +134,29 @@ const { locale } = Astro.props;
     addMessage(message, true);
     chatInput.value = '';
 
+    conversationHistory.push({ role: 'user', content: message });
+
+    // Cap history to last N messages
+    while (conversationHistory.length > MAX_HISTORY) {
+      conversationHistory.shift();
+    }
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, locale }),
+        body: JSON.stringify({ messages: conversationHistory, locale }),
       });
 
       if (res.ok) {
         const data = await res.json();
-        addMessage(data.answer || data.reply || data.message || 'Sorry, I could not process that.', false);
+        const answer = data.answer || 'Sorry, I could not process that.';
+        addMessage(answer, false);
+        conversationHistory.push({ role: 'assistant', content: answer });
+
+        while (conversationHistory.length > MAX_HISTORY) {
+          conversationHistory.shift();
+        }
       } else {
         addMessage(locale === 'zh' ? '抱歉，服务暂时不可用。' : 'Sorry, the service is temporarily unavailable.', false);
       }
