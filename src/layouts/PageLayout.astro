@@ -9,13 +9,21 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogType?: 'website' | 'article';
+  articleMeta?: {
+    publishedTime: string;
+    author?: string;
+    tags?: string[];
+    section?: string;
+  };
+  jsonLd?: object;
 }
 
 const locale = getLocaleFromUrl(Astro.url);
-const { title, description, ogImage } = Astro.props;
+const { title, description, ogImage, ogType, articleMeta, jsonLd } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} ogImage={ogImage}>
+<BaseLayout title={title} description={description} ogImage={ogImage} ogType={ogType} articleMeta={articleMeta} jsonLd={jsonLd}>
   <Header locale={locale} />
   <main>
     <slot />

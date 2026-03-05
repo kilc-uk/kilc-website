@@ -22,6 +22,27 @@ const { Content } = await render(entry);
 
 const tags = entry.data.tags ?? [];
 
+const postUrl = new URL(Astro.url.pathname, Astro.site).href;
+const blogJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": entry.data.title,
+  "datePublished": entry.data.date.toISOString(),
+  "author": entry.data.author
+    ? { "@type": "Person", "name": entry.data.author }
+    : { "@type": "Organization", "name": "Keane International Legal Consultancy" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Keane International Legal Consultancy",
+    "url": "https://kilc.co.uk"
+  },
+  "description": entry.data.excerpt,
+  ...(entry.data.coverImage ? { "image": new URL(entry.data.coverImage, Astro.site).href } : {}),
+  "url": postUrl,
+  ...(tags.length ? { "keywords": tags.join(', ') } : {}),
+  "inLanguage": "en-GB",
+};
+
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
 }
@@ -30,6 +51,15 @@ function formatDate(date: Date): string {
 <PageLayout
   title={`${entry.data.title} — KILC Blog`}
   description={entry.data.excerpt}
+  ogImage={entry.data.coverImage}
+  ogType="article"
+  articleMeta={{
+    publishedTime: entry.data.date.toISOString(),
+    author: entry.data.author,
+    tags: entry.data.tags,
+    section: 'Blog',
+  }}
+  jsonLd={blogJsonLd}
 >
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Back link -->

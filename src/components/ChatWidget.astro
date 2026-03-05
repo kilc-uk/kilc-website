@@ -104,7 +104,7 @@ const { locale } = Astro.props;
     chatInput.value = '';
 
     try {
-      const res = await fetch('https://platform.kilc.co.uk/api/chat', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message, locale }),
@@ -112,7 +112,7 @@ const { locale } = Astro.props;
 
       if (res.ok) {
         const data = await res.json();
-        addMessage(data.reply || data.message || 'Sorry, I could not process that.', false);
+        addMessage(data.answer || data.reply || data.message || 'Sorry, I could not process that.', false);
       } else {
         addMessage(locale === 'zh' ? '抱歉，服务暂时不可用。' : 'Sorry, the service is temporarily unavailable.', false);
       }

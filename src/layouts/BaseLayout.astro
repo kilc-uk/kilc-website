@@ -7,6 +7,14 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogType?: 'website' | 'article';
+  articleMeta?: {
+    publishedTime: string;
+    author?: string;
+    tags?: string[];
+    section?: string;
+  };
+  jsonLd?: object;
 }
 
 const locale = getLocaleFromUrl(Astro.url) as Locale;
@@ -14,6 +22,9 @@ const {
   title = t(locale, 'site.title'),
   description = t(locale, 'site.description'),
   ogImage = '/images/og-default.jpg',
+  ogType = 'website',
+  articleMeta,
+  jsonLd,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
@@ -27,6 +38,9 @@ const alternateUrl = new URL(alternatePath, Astro.site);
 <!doctype html>
 <html lang={locale === 'zh' ? 'zh-CN' : 'en-GB'} class="scroll-smooth">
   <head>
+    <!-- Performance hints -->
+    <link rel="preconnect" href="https://analytics.kilc.co.uk" />
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
@@ -40,15 +54,55 @@ const alternateUrl = new URL(alternatePath, Astro.site);
     <link rel="alternate" hreflang={alternateLocale === 'en' ? 'en-GB' : 'zh-Hans'} href={alternateUrl.href} />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Keane International Legal Consultancy" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl.href} />
     <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={locale === 'zh' ? 'zh_CN' : 'en_GB'} />
+
+    <!-- Article meta (blog posts only) -->
+    {articleMeta && (
+      <>
+        <meta property="article:published_time" content={articleMeta.publishedTime} />
+        {articleMeta.author && <meta property="article:author" content={articleMeta.author} />}
+        {articleMeta.section && <meta property="article:section" content={articleMeta.section} />}
+        {(articleMeta.tags ?? []).map(tag => <meta property="article:tag" content={tag} />)}
+      </>
+    )}
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site).href} />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- RSS feed discovery -->
+    <link rel="alternate" type="application/rss+xml" title="KILC Blog" href="/rss.xml" />
+
+    <!-- JSON-LD: Organization (every page) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": ["Organization", "LegalService"],
+      "name": "Keane International Legal Consultancy",
+      "alternateName": "KILC",
+      "url": "https://kilc.co.uk",
+      "logo": "https://kilc.co.uk/images/general/kilc-logo-colour-transparent.png",
+      "description": "UK-based legal consultancy helping Chinese businesses and individuals expand to the UK",
+      "areaServed": ["GB", "CN"],
+      "serviceType": "Legal Consultancy"
+    })} />
+
+    <!-- JSON-LD: Page-specific (blog posts) -->
+    {jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    )}
 
     <!-- Umami analytics -->
     <script defer src="https://analytics.kilc.co.uk/script.js" data-website-id="c3272e3b-c8cc-4770-9fa0-55f10d8a162c"></script>

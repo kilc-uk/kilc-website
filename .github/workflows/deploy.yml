@@ -79,3 +79,25 @@ jobs:
           username: ${{ secrets.HETZNER_SSH_USER }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
           script: docker exec kilc-nginx nginx -s reload
+
+      - name: Deploy chat-api to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HETZNER_SSH_HOST }}
+          username: ${{ secrets.HETZNER_SSH_USER }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          source: chat-api/
+          target: ~/kilc-website/
+          overwrite: true
+
+      - name: Install deps and restart chat-api
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HETZNER_SSH_HOST }}
+          username: ${{ secrets.HETZNER_SSH_USER }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            cd ~/kilc-website/chat-api
+            npm install --production --silent
+            pm2 restart kilc-chat 2>/dev/null || pm2 start server.js --name kilc-chat
+            pm2 save

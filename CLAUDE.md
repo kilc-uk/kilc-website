@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**KILC Website** is a live Astro 5 static site (kilc.co.uk) with 44 pages, TypeScript, Tailwind CSS, and English + Chinese i18n.
+**KILC Website** is a live Astro 5 static site (kilc.co.uk) with 45 pages, TypeScript, Tailwind CSS, and English + Chinese i18n.
 
 - **Framework**: Astro 5 (static generation)
 - **Styling**: Tailwind CSS 3.4.19 with custom brand tokens
@@ -26,7 +26,7 @@ text:      #1C1A17 (body)
 footer:    #E5E7EB (light slate gray)
 ```
 
-Changes require testing all 44 pages locally before committing.
+Changes require testing all 45 pages locally before committing.
 
 ### i18n System
 
@@ -38,7 +38,7 @@ Changes require testing all 44 pages locally before committing.
 
 ### Core Layouts & Components
 
-- **BaseLayout.astro**: Master layout with Umami analytics script, hreflang tags, Open Graph meta
+- **BaseLayout.astro**: Master layout with Umami analytics script, hreflang tags, full SEO head (OG, Twitter Cards, JSON-LD, RSS discovery). Props: `title`, `description`, `ogImage`, `ogType` (`'website'|'article'`), `articleMeta` (blog posts), `jsonLd` (page-specific structured data)
 - **Global Styles**: `src/styles/global.css` (Tailwind directives + custom utilities)
 - **Font**: `system-ui` primary, `Noto Sans SC` for Chinese glyphs (self-hosted woff2 in `/fonts/`)
 
@@ -157,6 +157,8 @@ featured: false              # true = pinned to top of /blogs
 - EN: `src/content/blog/en/` → `/blogs` (CMS: **Blog Posts (English)**)
 - ZH: `src/content/blog/zh/` → `/zh/blogs` (CMS: **Blog Posts (Chinese)**)
 - Posts per locale are independent — no need to mirror across languages
+- EN posts are auto-included in the RSS feed at `/rss.xml` (sorted newest-first)
+- Blog detail pages automatically get `og:type=article`, `article:*` meta, and BlogPosting JSON-LD — no extra work needed beyond frontmatter
 
 ### Add a New Page
 
@@ -228,4 +230,4 @@ Do not modify Cloudflare DNS. Contact email provider (Hostinger) if MX records n
 
 ---
 
-**Last Updated**: March 3, 2026 (ZH blog, optional author, optional custom slug field for blog URL overrides)
+**Last Updated**: March 4, 2026 (Blog nav item, RSS feed at /rss.xml, full SEO head: og:site_name, og:image dimensions, Twitter Cards, JSON-LD Organization+BlogPosting, article OG meta on blog posts, preconnect hint)
