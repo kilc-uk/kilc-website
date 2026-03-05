@@ -99,5 +99,5 @@ jobs:
           script: |
             cd ~/kilc-website/chat-api
             npm install --production --silent
-            pm2 restart kilc-chat 2>/dev/null || pm2 start server.js --name kilc-chat
+            pm2 restart kilc-chat --update-env 2>/dev/null || pm2 start server.js --name kilc-chat --node-args="--env-file=/home/deploy/kilc-website/chat-api/.env"
             pm2 save
